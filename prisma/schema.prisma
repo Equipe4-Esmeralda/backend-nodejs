@@ -1,7 +1,7 @@
-// This is your Prisma schema file,
+// This is your Prisma schema file
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Looking for ways to speed up your queries or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
@@ -13,17 +13,180 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model UnidadeHospitalar {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  email String
-  }
+  nome               String
+  telefone           String?
+  email              String?
+  endereco           Endereco @relation(fields: [enderecoid], references: [id])
+  enderecoid         String @db.ObjectId @unique
+  dadosPessoal       String?
+  disponibilidadeLeitos Int?
+  temUTI             Boolean?
+  transferenciasSaida Transferencia[] @relation(name: "origem")
+  transferenciasEntrada Transferencia[] @relation(name: "destino")
+}
 
-model Customers {
+model Endereco {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  document String 
-  email String 
-  createdAt DateTime @default(now())
-  updateAt DateTime @default(now())
+  rua         String 
+  complemento String? 
+  bairro      String 
+  cep         String 
+  cidade      String 
+  estado      String 
+  unidadeHospitalar UnidadeHospitalar?
+}
+
+model Medicamento{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  nome   String
+  principioAtivo  String
+  descricao String?
+  dosagem   String 
+  transferenciaIDs String[]   @db.ObjectId
+  transferencia Transferencia[] @relation(fields: [transferenciaIDs], references: [id])
+}
+
+model Medico {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  nome         String
+  crm          String        @unique
+  especialidade Especialidade
+  telefone      String?
+  email        String?
+  papel        PapelMedico
+  socilitacoes Solicitacao[]
+}
+
+model Paciente {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  nome         String 
+  cpf          String @unique
+  dataNascimento String? 
+  sexo         Sexo
+  solicitacao  Solicitacao?
+}
+
+model Solicitacao {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  medicoOrigem   Medico           @relation(fields: [medicoOrigemId], references: [id])
+  medicoOrigemId String @db.ObjectId @unique
+  paciente       Paciente         @relation(fields: [pacienteId], references: [id])
+  pacienteId     String @db.ObjectId @unique
+  transferencia  Transferencia?
+  dataSolicitacao DateTime?        @db.Date
+  status         StatusSolicitacao
+  justificativa   String?         
+  prioridade     Prioridade
+  dataAprovacao   DateTime?        @db.Date
+  motivoRecusa    String?          
+}
+
+model Transferencia {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  solicitacao               Solicitacao              @relation(fields: [solicitacaoId], references: [id])
+  solicitacaoId             String                   @db.ObjectId @unique
+  meioTransporte            MeioTransporte
+  destino                   UnidadeHospitalar        @relation(name: "destino", fields: [destinoId], references: [id])
+  destinoId                 String                   @db.ObjectId @unique
+  origem                    UnidadeHospitalar        @relation(name: "origem", fields: [origemId], references: [id])
+  origemId                  String                   @db.ObjectId @unique
+  classificacao             ClassificacaoTransferencia
+  procedimentosAcondicionamento String
+  procedimentosUnidadeDestino String
+  horarioSaida               DateTime?
+  horarioPrevistoChegada      DateTime?
+  distancia                  Float?
+  status                    StatusTransferencia
+  medicamentoIDs           String[] @db.ObjectId 
+  medicamento Medicamento[]  @relation(fields: [medicamentoIDs], references: [id])
+}
+
+enum MeioTransporte {
+  AMBULANCIA
+  HELICOPTERO
+  OUTRO
+}
+
+enum ClassificacaoTransferencia {
+  PRIMARIA
+  SECUNDARIA
+  TERCIARIA
+}
+
+enum StatusTransferencia {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDA
+  CANCELADA
+}
+
+enum Sexo {
+  MASCULINO
+  FEMININO
+}
+
+enum StatusSolicitacao {
+  PENDENTE
+  APROVADA
+  REJEITADA
+}
+
+enum Prioridade {
+  BAIXA
+  MEDIA
+  ALTA
+}
+
+enum Especialidade {
+  ALERGOLOGIA_E_IMUNOLOGIA
+	ANESTESIOLOGIA
+	ANGIOLOGIA_E_CIRURGIA_VASCULAR
+	CARDIOLOGIA
+	CIRURGIA_CARDIACA
+	CIRURGIA_DE_CABECA_E_PESCOCO
+	CIRURGIA_GERAL
+	CIRURGIA_PLASTICA
+	CIRURGIA_TORACICA
+	CIRURGIA_VASCULAR
+	CLINICA_MEDICA
+	DERMATOLOGIA
+	ENDOCRINOLOGIA_E_METABOLOGIA
+	GASTROENTEROLOGIA
+	GENETICA_MEDICA
+	GERIATRIA
+	GINECOLOGIA_E_OBSTETRICIA
+	HEMATOLOGIA_E_HEMOTERAPIA
+	INFECTOLOGIA
+	MASTOLOGIA
+	MEDICINA_DE_FAMILIA_E_COMUNIDADE
+	MEDICINA_DE_TRAFEGO
+	MEDICINA_DO_TRABALHO
+	MEDICINA_DO_ESPORTE
+	MEDICINA_INTENSIVA
+	MEDICINA_LEGAL_E_PERICIA_MEDICA
+	MEDICINA_NUCLEAR
+	NEFROLOGIA
+	NEUROCIRURGIA
+	NEUROLOGIA
+	NUTROLOGIA
+	OFTALMOLOGIA
+	ORTOPEDIA_E_TRAUMATOLOGIA
+	OTORRINOLARINGOLOGIA
+	PATOLOGIA
+	PATOLOGIA_CLINICA_MEDICINA_LABORATORIAL
+	PEDIATRIA
+	PNEUMOLOGIA
+	PSIQUIATRIA
+	RADIOLOGIA_E_DIAGNOSTICO_POR_IMAGEM
+	RADIOTERAPIA
+	REUMATOLOGIA
+	UROLOGIA
+}
+
+enum PapelMedico {
+    REGULADOR
+    ORIGEM
+    DESTINO
 }
