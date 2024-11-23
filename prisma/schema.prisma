@@ -13,6 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
+  password String
+  // Add other fields as needed (e.g., name, profile picture)
+}
+
 model UnidadeHospitalar {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   nome               String
