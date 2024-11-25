@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Gerenciamento de Pacientes</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Pacientes</h1>
+
+        <!-- Formulário para cadastro de novo paciente -->
+        <form class="form" action="#" method="post">
+            <label for="nome-paciente">Nome do Paciente:</label>
+            <input type="text" id="nome-paciente" name="nome-paciente" required>
+
+            <button type="submit" class="btn">Cadastrar Paciente</button>
+        </form>
+
+        <!-- Lista de pacientes -->
+        <h2>Lista de Pacientes Cadastrados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>João Silva</td>
+                    <td>
+                        <button class="btn small">Editar</button>
+                        <button class="btn small danger">Deletar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Maria Souza</td>
+                    <td>
+                        <button class="btn small">Editar</button>
+                        <button class="btn small danger">Deletar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="pagina_inicial.html" class="btn">Voltar</a>
+    </div>
+</body>
+</html>

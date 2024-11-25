@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Pacientes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Gerenciamento de Pacientes</h1>
+        
+        <!-- Form -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Adicionar/Editar Paciente</h2>
+            <form id="pacienteForm" class="space-y-4">
+                <input type="hidden" id="pacienteId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nome</label>
+                        <input type="text" id="nome" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">CPF</label>
+                        <input type="text" id="cpf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Sexo</label>
+                        <select id="sexo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                            <option value="">Selecione</option>
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMININO">Feminino</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+                        <input type="date" id="dataNascimento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="resetForm()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Limpar
+                    </button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CPF</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sexo</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data de Nascimento</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="pacientesTable" class="bg-white divide-y divide-gray-200">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/pacientes';
+        let pacientes = [];
+
+        // Form handling
+        document.getElementById('pacienteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const paciente = {
+                nome: document.getElementById('nome').value,
+                cpf: document.getElementById('cpf').value,
+                sexo: document.getElementById('sexo').value,
+                dataNascimento: document.getElementById('dataNascimento').value
+            };
+
+            const id = document.getElementById('pacienteId').value;
+            
+            try {
+                if (id) {
+                    await updatePaciente(id, paciente);
+                } else {
+                    await createPaciente(paciente);
+                }
+                resetForm();
+                loadPacientes();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao salvar o paciente');
+            }
+        });
+
+        // CRUD Operations
+        async function createPaciente(paciente) {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paciente),
+            });
+            if (!response.ok) throw new Error('Error creating paciente');
+            return response.json();
+        }
+
+        async function loadPacientes() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Error loading pacientes');
+                pacientes = await response.json();
+                renderPacientes();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro ao carregar pacientes');
+            }
+        }
+
+        async function updatePaciente(id, paciente) {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paciente),
+            });
+            if (!response.ok) throw new Error('Error updating paciente');
+            return response.json();
+        }
+
+        async function deletePaciente(id) {
+            if (!confirm('Tem certeza que deseja excluir este paciente?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                });
+                if (!response.ok) throw new Error('Error deleting paciente');
+                loadPacientes();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro ao excluir paciente');
+            }
+        }
+
+        function editPaciente(id) {
+            const paciente = pacientes.find(p => p.id === id);
+            if (!paciente) return;
+
+            document.getElementById('pacienteId').value = paciente.id;
+            document.getElementById('nome').value = paciente.nome;
+            document.getElementById('cpf').value = paciente.cpf;
+            document.getElementById('sexo').value = paciente.sexo;
+            document.getElementById('dataNascimento').value = paciente.dataNascimento;
+        }
+
+        function resetForm() {
+            document.getElementById('pacienteForm').reset();
+            document.getElementById('pacienteId').value = '';
+        }
+
+        function formatDate(dateString) {
+        const date = new Date(dateString);
+        // Adjust for time zone offset
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); 
+
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return date.toLocaleDateString('pt-BR', options);
+        }
+
+        function renderPacientes() {
+            const tbody = document.getElementById('pacientesTable');
+            tbody.innerHTML = pacientes.map(paciente => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">${paciente.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${paciente.nome}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${paciente.cpf}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${paciente.sexo}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${formatDate(paciente.dataNascimento)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button onclick="editPaciente('${paciente.id}')" class="text-blue-600 hover:text-blue-900 mr-3">
+                            Editar
+                        </button>
+                        <button onclick="deletePaciente('${paciente.id}')" class="text-red-600 hover:text-red-900">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initial load
+        loadPacientes();
+    </script>
+</body>
+</html>

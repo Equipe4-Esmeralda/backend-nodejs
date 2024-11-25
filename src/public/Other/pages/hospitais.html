@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospitais</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <header>
+    <h1>Hospitais Cadastrados</h1>
+  </header>
+  <main>
+    <section>
+      <table class="hospitais-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Endereço</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="hospitalTableBody">
+          <!-- Linhas geradas dinamicamente -->
+        </tbody>
+      </table>
+      <button onclick="window.location.href='cadastro-hospitais.html'" class="add-hospital-button">Cadastrar Novo Hospital</button>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2024 STP. Todos os direitos reservados.</p>
+  </footer>
+  <script src="../js/paginas.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/hospitais.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <header class="header">
+    <div class="container">
+      <h1>Login de Usuário</h1>
+    </div>
+  </header>
+  <main class="login-container">
+    <form id="loginForm" class="form">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="Digite seu e-mail" required>
+      
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="Digite sua senha" required>
+      
+      <button type="submit" class="btn">Entrar</button>
+    </form>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2024 STP. Todos os direitos reservados.</p>
+  </footer>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      alert("Login bem-sucedido!"); // Simula um login bem-sucedido
+      window.location.href = "index.html"; // Redireciona para a próxima página
+    });
+  </script>
+  <script src="../js/paginas.js"></script>
+  <script src="../js/navigation.js"></script>
+</body>
+</html>

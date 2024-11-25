@@ -1,0 +1,32 @@
+/* Estilo para tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Botões pequenos */
+.btn.small {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+.btn.danger {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.btn.danger:hover {
+    background-color: #cc0000;
+}

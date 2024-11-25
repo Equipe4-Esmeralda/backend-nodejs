@@ -1,0 +1,43 @@
+<!-- editar-paciente.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Paciente</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/cadastro-pacientes.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <header>
+    <h1>Editar Paciente</h1>
+  </header>
+  <main>
+    <form id="formEditarPaciente">
+      <input type="hidden" id="id" name="id">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required>
+
+      <label for="cpf">CPF:</label>
+      <input type="text" id="cpf" name="cpf" required>
+
+      <label for="dataNascimento">Data de Nascimento:</label>
+      <input type="date" id="dataNascimento" name="dataNascimento">
+
+      <label for="sexo">Sexo:</label>
+      <select id="sexo" name="sexo" required>
+        <option value="MASCULINO">Masculino</option>
+        <option value="FEMININO">Feminino</option>
+      </select>
+
+      <button type="submit">Salvar Alterações</button>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; 2024 STP. Todos os direitos reservados.</p>
+  </footer>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/editar-paciente.js"></script>
+</body>
+</html>

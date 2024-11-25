@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitações</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/transferencias.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <header>
+    <h1>Solicitações Cadastradas</h1>
+  </header>
+  <main>
+    <section>
+      <table class="transferencias-table">
+        <thead>
+          <tr>
+            <th>Origem</th>
+            <th>Destino</th>
+            <th>Motivo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="transferTableBody">
+          <!-- As linhas serão geradas dinamicamente pelo JavaScript -->
+        </tbody>
+      </table>
+
+      <button class="add-transferencia-button" onclick="window.location.href='cadastro-transferencia.html'">
+        Cadastrar Nova Solicitação
+      </button>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2024 STP. Todos os direitos reservados.</p>
+  </footer>
+  <script src="../js/paginas.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/transferencias.js"></script>
+</body>
+</html>

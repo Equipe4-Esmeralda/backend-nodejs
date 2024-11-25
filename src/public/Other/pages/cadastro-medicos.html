@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Médicos</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/medicos.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <header>
+    <h1>Cadastro de Médicos</h1>
+  </header>
+  <main>
+    <form id="formCadastroMedico">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required>
+
+      <label for="crm">CRM:</label>
+      <input type="text" id="crm" name="crm" required>
+
+      <label for="especialidade">Especialidade:</label>
+      <select id="especialidade" name="especialidade" required>
+        <option value="CARDIOLOGIA">Cardiologia</option>
+        <option value="NEUROLOGIA">Neurologia</option>
+        <option value="ORTOPEDIA">Ortopedia</option>
+        <!-- Outras especialidades podem ser adicionadas -->
+      </select>
+
+      <label for="papel">Papel:</label>
+      <select id="papel" name="papel" required>
+        <option value="REGULADOR">Regulador</option>
+        <option value="ORIGEM">Origem</option>
+        <option value="DESTINO">Destino</option>
+      </select>
+
+      <button type="submit">Cadastrar</button>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; 2024 STP. Todos os direitos reservados.</p>
+  </footer>
+  <script src="../js/paginas.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/cadastro-medicos.js"></script>
+</body>
+</html>

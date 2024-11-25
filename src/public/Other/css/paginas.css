@@ -1,0 +1,22 @@
+
+/* Estilo da barra de navegação */
+.navbar {
+  background-color: #0078d7;
+  padding: 10px 20px;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 0;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #d1e7ff;
+}

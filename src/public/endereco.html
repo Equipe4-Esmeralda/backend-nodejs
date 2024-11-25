@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Endereços</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Gerenciamento de Endereços</h1>
+        
+        <!-- Form -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Adicionar/Editar Endereço</h2>
+            <form id="enderecoForm" class="space-y-4">
+                <input type="hidden" id="enderecoId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Rua</label>
+                        <input type="text" id="rua" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Complemento</label>
+                        <input type="text" id="complemento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Bairro</label>
+                        <input type="text" id="bairro" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Cidade</label>
+                        <input type="text" id="cidade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Estado</label>
+                        <input type="text" id="estado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">CEP</label>
+                        <input type="text" id="cep" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="resetForm()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Limpar
+                    </button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rua</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Complemento</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bairro</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cidade</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CEP</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="enderecosTable" class="bg-white divide-y divide-gray-200">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/enderecos';
+        let enderecos = [];
+
+        // Form handling
+        document.getElementById('enderecoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const endereco = {
+                rua: document.getElementById('rua').value,
+                complemento: document.getElementById('complemento').value,
+                bairro: document.getElementById('bairro').value,
+                cidade: document.getElementById('cidade').value,
+                estado: document.getElementById('estado').value,
+                cep: document.getElementById('cep').value
+            };
+
+            const id = document.getElementById('enderecoId').value;
+            
+            try {
+                if (id) {
+                    await updateEndereco(id, endereco);
+                } else {
+                    await createEndereco(endereco);
+                }
+                resetForm();
+                loadEnderecos();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao salvar o endereço');
+            }
+        });
+
+        // CRUD Operations
+        async function createEndereco(endereco) {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(endereco),
+            });
+            if (!response.ok) throw new Error('Error creating endereco');
+            return response.json();
+        }
+
+        async function loadEnderecos() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Error loading enderecos');
+                enderecos = await response.json();
+                renderEnderecos();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro ao carregar endereços');
+            }
+        }
+
+        async function updateEndereco(id, endereco) {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(endereco),
+            });
+            if (!response.ok) throw new Error('Error updating endereco');
+            return response.json();
+        }
+
+        async function deleteEndereco(id) {
+            if (!confirm('Tem certeza que deseja excluir este endereço?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                });
+                if (!response.ok) throw new Error('Error deleting endereco');
+                loadEnderecos();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erro ao excluir endereço');
+            }
+        }
+
+        function editEndereco(id) {
+            const endereco = enderecos.find(e => e.id === id);
+            if (!endereco) return;
+
+            document.getElementById('enderecoId').value = endereco.id;
+            document.getElementById('rua').value = endereco.rua;
+            document.getElementById('complemento').value = endereco.complemento;
+            document.getElementById('bairro').value = endereco.bairro;
+            document.getElementById('cidade').value = endereco.cidade;
+            document.getElementById('estado').value = endereco.estado;
+            document.getElementById('cep').value = endereco.cep;
+        }
+
+        function resetForm() {
+            document.getElementById('enderecoForm').reset();
+            document.getElementById('enderecoId').value = '';
+        }
+
+        function renderEnderecos() {
+            const tbody = document.getElementById('enderecosTable');
+            tbody.innerHTML = enderecos.map(endereco => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">${endereco.rua}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${endereco.complemento}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${endereco.bairro}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${endereco.cidade}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${endereco.estado}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${endereco.cep}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button onclick="editEndereco('${endereco.id}')" class="text-blue-600 hover:text-blue-900 mr-3">
+                            Editar
+                        </button>
+                        <button onclick="deleteEndereco('${endereco.id}')" class="text-red-600 hover:text-red-900">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initial load
+        loadEnderecos();
+    </script>
+</body>
+</html>

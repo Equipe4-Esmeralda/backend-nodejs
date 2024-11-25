@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Médicos</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/medicos.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <header>
+    <h1>Médicos Cadastrados</h1>
+  </header>
+  <main>
+    <section>
+      <table class="medicos-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CRM</th>
+            <th>Especialidade</th>
+            <th>Papel</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="medicoTableBody">
+          <!-- Linhas geradas dinamicamente -->
+        </tbody>
+      </table>
+      <button onclick="window.location.href='cadastro-medicos.html'" class="add-medico-button">Cadastrar Novo Médico</button>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2024 STP. Todos os direitos reservados.</p>
+  </footer>
+  <script src="../js/paginas.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/medicos.js"></script>
+</body>
+</html>
